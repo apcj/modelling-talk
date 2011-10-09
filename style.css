@@ -62,3 +62,8 @@ line {
 ul {
   list-style-type: none;
 }
+
+.fillslide {
+  width: 100%;
+  height: 100%;
+}
