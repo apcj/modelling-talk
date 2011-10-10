@@ -58,17 +58,24 @@ text.shadow {
     <script type="text/javascript">
 
 var tables = [
-  { name: "Country", fields: [
+  { name: "Language", layout: "left", fields: [
     { name: "language_code" },
     { name: "language_name" },
     { name: "word_count" }
+  ]},
+  { name: "Country", layout: "right", fields: [
+    { name: "country_code" },
+    { name: "country_name" },
+    { name: "flag_uri" }
   ]}
 ];
 
 var nodes = {};
 
 var w = 1024,
-    h = 768;
+    h = 768,
+    tableWidth = 300
+    margins = { x: 50, y: 200 };
 
 var svg = d3.select("#chart").append("svg:svg")
     .attr("width", w)
@@ -78,16 +85,17 @@ var tableGroup = svg.selectAll("g.table")
     .data(tables)
   .enter().append("svg:g")
     .attr("class", "table")
-    .attr("transform", "translate(200, 200)");
+    .attr("transform", function(d) { return "translate(" + 
+      (d.layout === "left" ? margins.x : w - margins.x - tableWidth) + ", " + margins.y + ")" });
 
 tableGroup.append("svg:rect")
     .attr("class", "table-outline")
     .attr("rx", 20)
     .attr("ry", 20)
-    .attr("width", 300)
+    .attr("width", tableWidth)
     .attr("height", 400);
 
-var fixed = function(v) { return function(ignore) { return v; }};
+var fixed = function(v) { return function() { return v; }};
 var stack = d3.layout.stack().y(fixed(50));
 var d2 = function(array) { return array.map(function(element) {return [element]}); };
 
