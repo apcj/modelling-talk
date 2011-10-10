@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Country and Language</title>
+    <script type="text/javascript" src="d3/d3.js"></script>
+    <script type="text/javascript" src="d3/d3.geom.js"></script>
+    <script type="text/javascript" src="d3/d3.layout.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 2px;
+}
+
+marker#licensing {
+  fill: lightgreen;
+}
+
+path.link.licensing {
+  stroke: lightgreen;
+}
+
+path.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 3px;
+}
+
+text {
+  font: 14px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 4px;
+}
+
+.table-outline {
+  stroke: black;
+  stroke-width: 4px;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="body">
+      <div id="chart"></div>
+      <div id="header">Table</div>
+    </div>
+    <script type="text/javascript">
+
+var tables = [
+  { name: "Country", fields: [
+    { name: "language_code" },
+    { name: "language_name" },
+    { name: "word_count" }
+  ]}
+];
+
+var nodes = {};
+
+var w = 1024,
+    h = 768;
+
+var svg = d3.select("#chart").append("svg:svg")
+    .attr("width", w)
+    .attr("height", h);
+
+var tableGroup = svg.selectAll("g.table")
+    .data(tables)
+  .enter().append("svg:g")
+    .attr("class", "table")
+    .attr("transform", "translate(200, 200)");
+
+tableGroup.append("svg:rect")
+    .attr("class", "table-outline")
+    .attr("rx", 20)
+    .attr("ry", 20)
+    .attr("width", 300)
+    .attr("height", 400);
+
+var fixed = function(v) { return function(ignore) { return v; }};
+var stack = d3.layout.stack().y(fixed(50));
+var d2 = function(array) { return array.map(function(element) {return [element]}); };
+
+var fieldGroup = tableGroup.selectAll("g.field")
+    .data(function(d) { return stack(d2(d.fields)); })
+    .enter().append("svg:g")
+    .attr("class", "field")
+    .attr("transform", function(d) { return "translate(0, " + d[0].y0 + ")"; });
+    
+fieldGroup.append("svg:text")
+    .attr("x", 10)
+    .attr("y", 50)
+    .style("font-size", 30)
+    .text(function(d) { return d[0].name; });
+
+    </script>
+  </body>
+</html>
