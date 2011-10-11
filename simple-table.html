@@ -8,51 +8,37 @@
     <script type="text/javascript" src="d3/d3.layout.js"></script>
     <link type="text/css" rel="stylesheet" href="style.css"/>
     <style type="text/css">
+    
+    th {
+      text-align: left;
+    }
+    
+    table.feature {
+      position: relative;
+      top: 0px;
+      left: 200px;
+      font-size: 30px;
+    }
 
-path.link {
-  fill: none;
-  stroke: #666;
-  stroke-width: 2px;
-}
-
-marker#licensing {
-  fill: lightgreen;
-}
-
-path.link.licensing {
-  stroke: lightgreen;
-}
-
-path.link.resolved {
-  stroke-dasharray: 0,2 1;
-}
-
-circle {
-  fill: #ccc;
-  stroke: #333;
-  stroke-width: 3px;
-}
-
-text {
-  font: 14px sans-serif;
-  pointer-events: none;
-}
-
-text.shadow {
-  stroke: #fff;
-  stroke-width: 4px;
-}
-
-.table-outline {
-  stroke: black;
-  stroke-width: 4px;
-}
-
+    table.feature td, table.feature th {
+      padding: 0px 20px 0px 20px;
+    }
+    
+    tr.headers {
+      height: 30px;
+      opacity: 0;
+    }
+    
     </style>
   </head>
   <body>
     <div id="body">
-      <table class="feature"></table>
+      <table class="feature">
+        <tr class="headers hidden">
+          <th>Country</th>
+          <th>Language</th>
+        </tr>
+      </table>
     </div>
     <script type="text/javascript">
 
@@ -91,7 +77,6 @@ var countries = [
   ]}
 ];
 
-var nodes = {};
 
 var w = 1024,
     h = 768,
@@ -109,6 +94,11 @@ var row = table.selectAll("tr")
 row.append("td").text(function(d) { return d.country_name; });
 row.append("td").text(function(d) { return d.language_name; });
 
+window.animationNext = function() {
+  table.transition().duration(1000).style("top", "30px");
+  table.select(".headers").transition().duration(1000).style("opacity", 1);
+  window.animationNext = null;
+}
     </script>
   </body>
 </html>

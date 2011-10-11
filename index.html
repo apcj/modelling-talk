@@ -7,7 +7,7 @@
     <style type="text/css">
 
 body {
-  background: black;
+  background: white;
   position: relative;
   width: 1024px;
   height: 768px;
@@ -117,21 +117,31 @@ function resize() {
 
 function step(delta) {
   if (delta > 0) {
-    var temp = previous;
-    previousIndex = currentIndex;
-    previous = current.attr("id", "previous");
-    currentIndex = nextIndex;
-    current = next.attr("id", "current");
-    nextIndex = nextIndex >= slides.length - 1 ? 0 : nextIndex + 1;
-    next = temp.attr("id", "next");
+    var animationNext = current.node().contentWindow.animationNext;
+    if (animationNext) {
+      animationNext();
+    } else {
+      var temp = previous;
+      previousIndex = currentIndex;
+      previous = current.attr("id", "previous");
+      currentIndex = nextIndex;
+      current = next.attr("id", "current");
+      nextIndex = nextIndex >= slides.length - 1 ? 0 : nextIndex + 1;
+      next = temp.attr("id", "next");
+    }
   } else if (delta < 0) {
-    var temp = next;
-    nextIndex = currentIndex;
-    next = current.attr("id", "next");
-    currentIndex = previousIndex;
-    current = previous.attr("id", "current");
-    previousIndex = previousIndex <= 0 ? slides.length - 1 : previousIndex - 1;
-    previous = temp.attr("id", "previous");
+    var animationPrev = current.node().contentWindow.animationPrev;
+    if (animationPrev) {
+      animationPrev();
+    } else {
+      var temp = next;
+      nextIndex = currentIndex;
+      next = current.attr("id", "next");
+      currentIndex = previousIndex;
+      current = previous.attr("id", "current");
+      previousIndex = previousIndex <= 0 ? slides.length - 1 : previousIndex - 1;
+      previous = temp.attr("id", "previous");
+    }
   } else {
     nextIndex = currentIndex >= slides.length - 1 ? 0 : currentIndex + 1;
     previousIndex = currentIndex <= 0 ? slides.length - 1 : currentIndex - 1;
