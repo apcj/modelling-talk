@@ -94,7 +94,7 @@
 { country_name: "Russia", languages: [
 { language_name: "Russian" }
 ]},
-{ country_name: "South", languages: [ Africa
+{ country_name: "South Africa", languages: [
 { language_name: "Afrikaans" },
 { language_name: "English" }
 ]},
@@ -102,7 +102,7 @@
 { language_name: "Spanish" },
 { language_name: "Catalan" }
 ]},
-{ country_name: "Sri", languages: [ Lanka
+{ country_name: "Sri Lanka", languages: [
 { language_name: "Sinhala" },
 { language_name: "Tamil" }
 ]},
@@ -128,5 +128,5 @@
 { language_name: "English" }
 ]},
 { country_name: "United Kingdom", languages: [
-{ language_name: "English" }
+{ language_name: "Welsh" }
 ]};
