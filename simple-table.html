@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Country and Language</title>
+    <script type="text/javascript" src="d3/d3.js"></script>
+    <script type="text/javascript" src="d3/d3.geom.js"></script>
+    <script type="text/javascript" src="d3/d3.layout.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 2px;
+}
+
+marker#licensing {
+  fill: lightgreen;
+}
+
+path.link.licensing {
+  stroke: lightgreen;
+}
+
+path.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 3px;
+}
+
+text {
+  font: 14px sans-serif;
+  pointer-events: none;
+}
+
+text.shadow {
+  stroke: #fff;
+  stroke-width: 4px;
+}
+
+.table-outline {
+  stroke: black;
+  stroke-width: 4px;
+}
+
+    </style>
+  </head>
+  <body>
+    <div id="body">
+      <table class="feature"></table>
+    </div>
+    <script type="text/javascript">
+
+var countries = [
+  { country_name: "Argentina", languages: [
+  { language_name: "Spanish" }
+  ]},
+  { country_name: "Australia", languages: [
+  { language_name: "English" }
+  ]},
+  { country_name: "Austria", languages: [
+  { language_name: "German" }
+  ]},
+  { country_name: "Belgium", languages: [
+  { language_name: "Dutch" },
+  { language_name: "French" },
+  { language_name: "German" }
+  ]},
+  { country_name: "Brazil", languages: [
+  { language_name: "Portuguese" }
+  ]},
+  { country_name: "Canada", languages: [
+  { language_name: "English" },
+  { language_name: "French" }
+  ]},
+  { country_name: "China", languages: [
+  { language_name: "written: Simplified Chinese" },
+  { language_name: "spoken: Mandarin" }
+  ]},
+  { country_name: "Czech Republic", languages: [
+  { language_name: "Czech" },
+  { language_name: "Slovak" }
+  ]},
+  { country_name: "Denmark", languages: [
+  { language_name: "Danish" }
+  ]}
+];
+
+var nodes = {};
+
+var w = 1024,
+    h = 768,
+    tableWidth = 300
+    margins = { x: 50, y: 200 };
+
+var table = d3.select("table.feature");
+
+var row = table.selectAll("tr")
+    .data(countries.map(function (country) { return country.languages.map(function(language) {
+      return { country_name: country.country_name, language_name: language.language_name };
+    })}).reduce(function(previous, current) { return previous.concat(current); }))
+  .enter().append("tr");
+  
+row.append("td").text(function(d) { return d.country_name; });
+row.append("td").text(function(d) { return d.language_name; });
+
+    </script>
+  </body>
+</html>
