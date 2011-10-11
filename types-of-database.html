@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+    <title>Country and Language</title>
+    <script type="text/javascript" src="d3/d3.js"></script>
+    <script type="text/javascript" src="d3/d3.geom.js"></script>
+    <script type="text/javascript" src="d3/d3.layout.js"></script>
+    <link type="text/css" rel="stylesheet" href="style.css"/>
+    <style type="text/css">
+    
+    svg {
+      height: 60px;
+    }
+    
+    table#simplecomplex {
+      margin-top: 50px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 824px;
+      font: 300 36px "Helvetica Neue";
+    }
+
+    td.heading {
+      text-align: center;
+    }
+
+    td.simple {
+      text-align: left;
+    }
+    
+    td.complex {
+      text-align: right;
+    }
+    
+    table.feature {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 50px;
+      font-size: 30px;
+    }
+
+    table.feature td, table.feature th {
+      text-align: center;
+      padding: 0px 20px 0px 20px;
+    }
+    
+    .hidden {
+      opacity: 0;
+    }
+    
+    </style>
+  </head>
+  <body>
+    <div id="body">
+      <table id="simplecomplex">
+        <tr>
+          <td class="heading" colspan="3">Data Model</td>
+        </tr>
+        <tr>
+          <td class="simple">Simple</td>
+          <td></td>
+          <td class="complex">Complex</td>
+        </tr>
+      </table>
+      <svg>
+        <path d="M100 60L924 60L924 10Z"/>
+      </svg>
+      <table class="feature">
+        <tr>
+          <th class="hidden appear1">Key-Value</th>
+          <th class="hidden appear2">Document</th>
+          <th class="hidden appear3">Column</th>
+          <th class="hidden appear4">Graph</th>
+        </tr>
+        <tr>
+          <td class="hidden appear1"><img src="db-type-key-value.png"></td>
+          <td class="hidden appear2"><img src="db-type-document.png"></td>
+          <td class="hidden appear3"><img src="db-type-column.png"></td>
+          <td class="hidden appear4"><img src="db-type-graph.png"></td>
+        </tr>
+        <tr>
+          <th class="hidden"></th>
+          <th class="hidden"></th>
+          <th class="hidden"></th>
+          <th class="hidden appear5">Relational</th>
+        </tr>
+        <tr>
+          <td class="hidden"></td>
+          <td class="hidden"></td>
+          <td class="hidden"></td>
+          <td class="hidden appear5"><img src="db-type-relational.png"></td>
+        </tr>
+      </table>
+    </div>
+    <script type="text/javascript">
+
+var w = 1024,
+    h = 768,
+    tableWidth = 300
+    margins = { x: 50, y: 200 };
+
+var table = d3.select("table.feature");
+
+var animationStep = 0;
+
+window.animationNext = function() {
+  animationStep++;
+  table.selectAll(".appear" + animationStep).transition().duration(300).style("opacity", 1);
+  if (animationStep >= 5) {
+    window.animationNext = null;
+  }
+}
+    </script>
+  </body>
+</html>

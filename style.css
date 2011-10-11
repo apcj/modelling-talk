@@ -5,8 +5,8 @@ body {
 }
 
 svg {
-  width: 1280px;
-  height: 800px;
+  width: 1024px;
+  height: 768px;
 }
 
 #chart, #header {
