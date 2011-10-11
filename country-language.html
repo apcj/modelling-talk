@@ -61,6 +61,9 @@ text.shadow {
     <script type="text/javascript">
 
 d3.json("lang-table.json", function(countries) {
+
+  if (countries == null) return;
+
   var links = countries.map(function (country) { return country.languages.map(function(language) {
     return { source: country.country_name, target: language.language_name, type: "suit" };
   })}).reduce(function(previous, current) { return previous.concat(current); });

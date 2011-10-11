@@ -42,169 +42,39 @@
     </div>
     <script type="text/javascript">
 
-var countries = [
-{ country_name: "Argentina", languages: [
-{ language_name: "Spanish" }
-]},
-{ country_name: "Australia", languages: [
-{ language_name: "English" }
-]},
-{ country_name: "Austria", languages: [
-{ language_name: "German" }
-]},
-{ country_name: "Belgium", languages: [
-{ language_name: "Dutch" },
-{ language_name: "French" },
-{ language_name: "German" }
-]},
-{ country_name: "Brazil", languages: [
-{ language_name: "Portuguese" }
-]},
-{ country_name: "Canada", languages: [
-{ language_name: "English" },
-{ language_name: "French" }
-]},
-{ country_name: "China", languages: [
-{ language_name: "written: Simplified Chinese statewide" },
-{ language_name: "spoken: Mandarin statewide" }
-]},
-{ country_name: "Czech Republic", languages: [
-{ language_name: "Czech" },
-{ language_name: "Slovak" }
-]},
-{ country_name: "Denmark", languages: [
-{ language_name: "Danish" }
-]},
-{ country_name: "Egypt", languages: [
-{ language_name: "Arabic" }
-]},
-{ country_name: "Finland", languages: [
-{ language_name: "Finnish" }
-]},
-{ country_name: "France", languages: [
-{ language_name: "French" }
-]},
-{ country_name: "Germany", languages: [
-{ language_name: "German" }
-]},
-{ country_name: "Greece", languages: [
-{ language_name: "Greek" }
-]},
-{ country_name: "Hungary", languages: [
-{ language_name: "Hungarian" }
-]},
-{ country_name: "Iceland", languages: [
-{ language_name: "Icelandic" }
-]},
-{ country_name: "India", languages: [
-{ language_name: "English" },
-{ language_name: "Hindi" }
-]},
-{ country_name: "Iran", languages: [
-{ language_name: "Persian" }
-]},
-{ country_name: "Iraq", languages: [
-{ language_name: "Arabic" }
-]},
-{ country_name: "Ireland", languages: [
-{ language_name: "Irish" },
-{ language_name: "English" }
-]},
-{ country_name: "Israel", languages: [
-{ language_name: "Hebrew" }
-]},
-{ country_name: "Italy", languages: [
-{ language_name: "Italian" }
-]},
-{ country_name: "Japan", languages: [
-{ language_name: "Japanese" }
-]},
-{ country_name: "Morocco", languages: [
-{ language_name: "Amazigh" },
-{ language_name: "Arabic" }
-]},
-{ country_name: "Norway", languages: [
-{ language_name: "Norwegian" }
-]},
-{ country_name: "Pakistan", languages: [
-{ language_name: "Urdu" },
-{ language_name: "English" }
-]},
-{ country_name: "Poland", languages: [
-{ language_name: "Polish" }
-]},
-{ country_name: "Romania", languages: [
-{ language_name: "Romanian" }
-]},
-{ country_name: "Russia", languages: [
-{ language_name: "Russian" }
-]},
-{ country_name: "South Africa", languages: [
-{ language_name: "Afrikaans" },
-{ language_name: "English" }
-]},
-{ country_name: "Spain", languages: [
-{ language_name: "Spanish" },
-{ language_name: "Catalan" }
-]},
-{ country_name: "Sri Lanka", languages: [
-{ language_name: "Sinhala" },
-{ language_name: "Tamil" }
-]},
-{ country_name: "Sweden", languages: [
-{ language_name: "Swedish" }
-]},
-{ country_name: "Switzerland", languages: [
-{ language_name: "German" },
-{ language_name: "French" },
-{ language_name: "Italian" },
-{ language_name: "Romansh" }
-]},
-{ country_name: "Syria", languages: [
-{ language_name: "Arabic" }
-]},
-{ country_name: "Thailand", languages: [
-{ language_name: "Thai" }
-]},
-{ country_name: "Turkey", languages: [
-{ language_name: "Turkish" }
-]},
-{ country_name: "United Kingdom", languages: [
-{ language_name: "English" }
-]},
-{ country_name: "United Kingdom", languages: [
-{ language_name: "Welsh" }
-]}
-];
-
-
 var w = 1024,
     h = 768,
     tableWidth = 300
     margins = { x: 50, y: 200 };
 
-var table = d3.select("table.feature");
+d3.json("lang-table.json", function(countries) {
 
-var row = table.selectAll("tr")
-    .data(countries.map(function (country) { return country.languages.map(function(language) {
-      return { country_name: country.country_name, language_name: language.language_name };
-    })}).reduce(function(previous, current) { return previous.concat(current); }))
-  .enter().append("tr");
+  if (countries == null) return;
   
-row.append("td").text(function(d) { return d.country_name; });
-row.append("td").text(function(d) { return d.language_name; });
+  var table = d3.select("table.feature");
 
-window.animationNext = function() {
-  table.transition().duration(2000).style("top", (h - table.node().clientHeight) + "px");
+  var row = table.selectAll("tr")
+      .data(countries.map(function (country) { return country.languages.map(function(language) {
+        return { country_name: country.country_name, language_name: language.language_name };
+      })}).reduce(function(previous, current) { return previous.concat(current); }))
+    .enter().append("tr");
+  
+  row.append("td").text(function(d) { return d.country_name; });
+  row.append("td").text(function(d) { return d.language_name; });
+
   window.animationNext = function() {
-    table.transition().duration(1000).style("top", "0px");
+    table.transition().duration(2000).style("top", (h - table.node().clientHeight) + "px");
     window.animationNext = function() {
-      table.transition().duration(1000).style("top", "30px");
-      table.select(".headers").transition().duration(1000).style("opacity", 1);
-      window.animationNext = null;
+      table.transition().duration(1000).style("top", "0px");
+      window.animationNext = function() {
+        table.transition().duration(1000).style("top", "30px");
+        table.select(".headers").transition().duration(1000).style("opacity", 1);
+        window.animationNext = null;
+      };
     };
-  };
-}
+  }
+});
+
     </script>
   </body>
 </html>
