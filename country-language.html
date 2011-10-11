@@ -33,6 +33,14 @@ circle {
   stroke-width: 3px;
 }
 
+circle.country {
+  fill: #f00;
+}
+
+circle.language {
+  fill: #00f;
+}
+
 text {
   font: 14px sans-serif;
   pointer-events: none;
@@ -57,19 +65,12 @@ d3.json("lang-table.json", function(countries) {
     return { source: country.country_name, target: language.language_name, type: "suit" };
   })}).reduce(function(previous, current) { return previous.concat(current); });
 
-  // var links = [
-  //   {source: "England", target: "English", type: "suit"},
-  //   {source: "France", target: "Français", type: "suit"},
-  //   {source: "Canada", target: "English", type: "suit"},
-  //   {source: "Canada", target: "Français", type: "suit"}
-  // ];
-
   var nodes = {};
 
   // Compute the distinct nodes from the links.
   links.forEach(function(link) {
-    link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
-    link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+    link.source = nodes[link.source] || (nodes[link.source] = {name: link.source, type: "country" });
+    link.target = nodes[link.target] || (nodes[link.target] = {name: link.target, type: "language" });
   });
 
   var w = 1280,
@@ -79,8 +80,8 @@ d3.json("lang-table.json", function(countries) {
       .nodes(d3.values(nodes))
       .links(links)
       .size([w, h])
-      .linkDistance(80)
-      .charge(-500)
+      .linkDistance(60)
+      .charge(-400)
       .on("tick", tick)
       .start();
 
@@ -115,6 +116,7 @@ d3.json("lang-table.json", function(countries) {
   var circle = svg.append("svg:g").selectAll("circle")
       .data(force.nodes())
     .enter().append("svg:circle")
+      .attr("class", function(d) { return d.type; })
       .attr("r", 8)
       .call(force.drag);
 
