@@ -50,7 +50,8 @@ var nodes = {};
 
 var w = 1024,
     h = 768,
-    tableSize = { width: 300, height: 400 }
+    tableSize = { width: 300, height: 400 },
+    fieldHeight = 50,
     margins = { x: 50, y: 200 };
 
 var svg = d3.select("svg");
@@ -61,13 +62,6 @@ var tableGroup = svg.selectAll("g.table")
     .attr("class", "table")
     .attr("transform", function(d) { return "translate(" + 
       (d.layout === "left" ? margins.x : w - margins.x - tableSize.width) + ", " + margins.y + ")" });
-
-var tableOutline = tableGroup.append("svg:rect")
-    .attr("class", "table-outline")
-    .attr("rx", 40)
-    .attr("ry", 40)
-    .attr("width", tableSize.width)
-    .attr("height", tableSize.height);
 
 var tableName = tableGroup.append("svg:text")
     .attr("x", tableSize.width / 2)
@@ -111,7 +105,7 @@ endMarkerGroup.append("svg:path")
     .attr("d", "M -20 15 L -20 -15");
 
 var fixed = function(v) { return function() { return v; }};
-var stack = d3.layout.stack().y(fixed(50));
+var stack = d3.layout.stack().y(fixed(fieldHeight));
 var wrap = function(array) { return array.map(function(element) {return [element]}); };
 var unwrap = function(arrayOfArrays) { return arrayOfArrays.map(function(array) {return array[0]}); };
 
@@ -120,10 +114,25 @@ var fieldGroup = tableGroup.selectAll("g.field")
     .enter().append("svg:g")
     .attr("class", function(d) { return "field " + d.name; })
     .attr("transform", function(d) { return "translate(0, " + d.y0 + ")"; });
+
+fieldGroup.append("svg:rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", tableSize.width)
+    .attr("height", fieldHeight);
+
+var tableOutline = tableGroup.append("svg:rect")
+    .attr("class", "table-outline")
+    .attr("rx", 40)
+    .attr("ry", 40)
+    .attr("width", tableSize.width)
+    .attr("height", tableSize.height);
+
     
 var fieldNames = fieldGroup.append("svg:text")
     .attr("x", 10)
-    .attr("y", 50)
+    .attr("y", fieldHeight / 2)
+    .attr("alignment-baseline", "middle")
     .style("font-size", 30)
     .text(function(d) { return d.name; });
 
@@ -140,7 +149,11 @@ var animationSteps = [
       .style("opacity", 1);
   },
   function() {
-    fieldGroup.filter(function (d) { return d.delay_show; }).transition().duration(500)
+    var foreignKeyField = fieldGroup.filter(function (d) { return d.delay_show; });
+    foreignKeyField.select("rect")
+      .style("fill", "#FF0");
+    
+    foreignKeyField.transition().duration(500)
       .style("opacity", 1);
   }
 ];
