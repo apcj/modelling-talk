@@ -24,14 +24,21 @@
       <div id="chart">
         <svg>
           <defs>
-              <marker id="Triangle"
-                viewBox="0 0 10 10" refX="8" refY="5" 
-                markerUnits="strokeWidth"
-                markerWidth="4" markerHeight="7"
-                orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 z" />
-              </marker>
-            </defs>
+            <marker id="Triangle"
+              viewBox="0 0 10 10" refX="8" refY="5" 
+              markerUnits="strokeWidth"
+              markerWidth="4" markerHeight="7"
+              orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" />
+            </marker>
+            <marker id="Squid"
+              viewBox="0 0 0 10" refX="8" refY="5" 
+              markerUnits="strokeWidth"
+              markerWidth="4" markerHeight="7"
+              orient="auto">
+              <circle cx="0" cy="5" r="5" />
+            </marker>
+          </defs>
         </svg>
       </div>
     </div>
@@ -80,13 +87,39 @@ var tableName = tableGroup.append("svg:text")
     .style("font-size", 30)
     .text(function(d) { return d.name; });
 
-var middleHeight = margins.y + tableSize.height / 2;    
-var relationshipArrow = svg.append("svg:path")
-    .attr("d", "M" + (margins.x + tableSize.width) + " " + middleHeight +
-      "L" + (w - margins.x - tableSize.width) + " " + middleHeight)
+var middleHeight = margins.y + tableSize.height / 2;
+var middleWidth = w - (margins.x + tableSize.width) * 2;
+
+var relationshipGroup = svg.append("svg:g")
+    .attr("transform", "translate(" + (margins.x + tableSize.width) + "," + middleHeight + ")")
     .attr("stroke", "black")
-    .attr("stroke-width", "5")
-    .attr("marker-end", "url(#Triangle)");
+    .attr("stroke-width", "5");
+    
+relationshipGroup.append("svg:path")
+    .attr("d", "M 0 0 L " + middleWidth + " 0")
+
+var startMarkerGroup = relationshipGroup.append("svg:g");
+
+startMarkerGroup.append("svg:circle")
+    .attr("cx", 35)
+    .attr("cy", 0)
+    .attr("r", 15)
+    .attr("fill", "white")
+
+startMarkerGroup.append("svg:path")
+    .attr("d", "M 20 0 L 0 15");
+
+startMarkerGroup.append("svg:path")
+    .attr("d", "M 20 0 L 0 -15");
+        
+var endMarkerGroup = relationshipGroup.append("svg:g")
+    .attr("transform", "translate(" + middleWidth + ",0)");
+
+endMarkerGroup.append("svg:path")
+    .attr("d", "M -10 15 L -10 -15");
+
+endMarkerGroup.append("svg:path")
+    .attr("d", "M -20 15 L -20 -15");
 
 var fixed = function(v) { return function() { return v; }};
 var stack = d3.layout.stack().y(fixed(50));
