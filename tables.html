@@ -14,25 +14,27 @@
   stroke-width: 4px;
 }
 
+.field {
+  opacity: 0;
+}
     </style>
   </head>
   <body>
     <div id="body">
       <div id="chart"></div>
-      <div id="header">Table</div>
     </div>
     <script type="text/javascript">
 
 var tables = [
-  { name: "Language", layout: "left", fields: [
-    { name: "language_code" },
-    { name: "language_name" },
-    { name: "word_count" }
-  ]},
-  { name: "Country", layout: "right", fields: [
+  { name: "Country", layout: "left", fields: [
     { name: "country_code" },
     { name: "country_name" },
     { name: "flag_uri" }
+  ]},
+  { name: "Language", layout: "right", fields: [
+    { name: "language_code" },
+    { name: "language_name" },
+    { name: "word_count" }
   ]}
 ];
 
@@ -40,7 +42,7 @@ var nodes = {};
 
 var w = 1024,
     h = 768,
-    tableWidth = 300
+    tableSize = { width: 300, height: 400 }
     margins = { x: 50, y: 200 };
 
 var svg = d3.select("#chart").append("svg:svg")
@@ -52,14 +54,21 @@ var tableGroup = svg.selectAll("g.table")
   .enter().append("svg:g")
     .attr("class", "table")
     .attr("transform", function(d) { return "translate(" + 
-      (d.layout === "left" ? margins.x : w - margins.x - tableWidth) + ", " + margins.y + ")" });
+      (d.layout === "left" ? margins.x : w - margins.x - tableSize.width) + ", " + margins.y + ")" });
 
-tableGroup.append("svg:rect")
+var tableOutline = tableGroup.append("svg:rect")
     .attr("class", "table-outline")
-    .attr("rx", 20)
-    .attr("ry", 20)
-    .attr("width", tableWidth)
-    .attr("height", 400);
+    .attr("rx", 40)
+    .attr("ry", 40)
+    .attr("width", tableSize.width)
+    .attr("height", tableSize.height);
+
+var tableName = tableGroup.append("svg:text")
+    .attr("x", tableSize.width / 2)
+    .attr("y", tableSize.height / 2)
+    .attr("text-anchor", "middle")
+    .style("font-size", 30)
+    .text(function(d) { return d.name; });
 
 var fixed = function(v) { return function() { return v; }};
 var stack = d3.layout.stack().y(fixed(50));
@@ -71,11 +80,32 @@ var fieldGroup = tableGroup.selectAll("g.field")
     .attr("class", "field")
     .attr("transform", function(d) { return "translate(0, " + d[0].y0 + ")"; });
     
-fieldGroup.append("svg:text")
+var fieldNames = fieldGroup.append("svg:text")
     .attr("x", 10)
     .attr("y", 50)
     .style("font-size", 30)
     .text(function(d) { return d[0].name; });
+
+var animationSteps = [
+  function() {
+    tableName.transition().duration(500)
+      .attr("y", -30);
+    tableOutline.transition().duration(500)
+      .attr("rx", 0)
+      .attr("ry", 0);
+  },
+  function() {
+    fieldGroup.transition().duration(500)
+      .style("opacity", 1);
+  }
+];
+
+window.animationNext = function() {
+  animationSteps.shift()();
+  if (animationSteps.length < 1) {
+    window.animationNext = null;
+  }
+}
 
     </script>
   </body>
