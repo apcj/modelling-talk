@@ -17,6 +17,10 @@
 .field {
   opacity: 0;
 }
+
+.field.language_code {
+  opacity: 0;
+}
     </style>
   </head>
   <body>
@@ -32,7 +36,8 @@ var tables = [
   { name: "Country", layout: "left", fields: [
     { name: "country_code" },
     { name: "country_name" },
-    { name: "flag_uri" }
+    { name: "flag_uri" },
+    { name: "language_code", delay_show: true }
   ]},
   { name: "Language", layout: "right", fields: [
     { name: "language_code" },
@@ -107,19 +112,20 @@ endMarkerGroup.append("svg:path")
 
 var fixed = function(v) { return function() { return v; }};
 var stack = d3.layout.stack().y(fixed(50));
-var d2 = function(array) { return array.map(function(element) {return [element]}); };
+var wrap = function(array) { return array.map(function(element) {return [element]}); };
+var unwrap = function(arrayOfArrays) { return arrayOfArrays.map(function(array) {return array[0]}); };
 
 var fieldGroup = tableGroup.selectAll("g.field")
-    .data(function(d) { return stack(d2(d.fields)); })
+    .data(function(d) { return unwrap(stack(wrap(d.fields))); })
     .enter().append("svg:g")
-    .attr("class", "field")
-    .attr("transform", function(d) { return "translate(0, " + d[0].y0 + ")"; });
+    .attr("class", function(d) { return "field " + d.name; })
+    .attr("transform", function(d) { return "translate(0, " + d.y0 + ")"; });
     
 var fieldNames = fieldGroup.append("svg:text")
     .attr("x", 10)
     .attr("y", 50)
     .style("font-size", 30)
-    .text(function(d) { return d[0].name; });
+    .text(function(d) { return d.name; });
 
 var animationSteps = [
   function() {
@@ -130,7 +136,11 @@ var animationSteps = [
       .attr("ry", 0);
   },
   function() {
-    fieldGroup.transition().duration(500)
+    fieldGroup.filter(function (d) { return !d.delay_show; }).transition().duration(500)
+      .style("opacity", 1);
+  },
+  function() {
+    fieldGroup.filter(function (d) { return d.delay_show; }).transition().duration(500)
       .style("opacity", 1);
   }
 ];
