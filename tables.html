@@ -21,7 +21,19 @@
   </head>
   <body>
     <div id="body">
-      <div id="chart"></div>
+      <div id="chart">
+        <svg>
+          <defs>
+              <marker id="Triangle"
+                viewBox="0 0 10 10" refX="8" refY="5" 
+                markerUnits="strokeWidth"
+                markerWidth="4" markerHeight="7"
+                orient="auto">
+                <path d="M 0 0 L 10 5 L 0 10 z" />
+              </marker>
+            </defs>
+        </svg>
+      </div>
     </div>
     <script type="text/javascript">
 
@@ -45,9 +57,7 @@ var w = 1024,
     tableSize = { width: 300, height: 400 }
     margins = { x: 50, y: 200 };
 
-var svg = d3.select("#chart").append("svg:svg")
-    .attr("width", w)
-    .attr("height", h);
+var svg = d3.select("svg");
 
 var tableGroup = svg.selectAll("g.table")
     .data(tables)
@@ -69,6 +79,14 @@ var tableName = tableGroup.append("svg:text")
     .attr("text-anchor", "middle")
     .style("font-size", 30)
     .text(function(d) { return d.name; });
+
+var middleHeight = margins.y + tableSize.height / 2;    
+var relationshipArrow = svg.append("svg:path")
+    .attr("d", "M" + (margins.x + tableSize.width) + " " + middleHeight +
+      "L" + (w - margins.x - tableSize.width) + " " + middleHeight)
+    .attr("stroke", "black")
+    .attr("stroke-width", "5")
+    .attr("marker-end", "url(#Triangle)");
 
 var fixed = function(v) { return function() { return v; }};
 var stack = d3.layout.stack().y(fixed(50));
